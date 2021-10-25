@@ -74,6 +74,7 @@ const OrderScreen = ({ match, history }) => {
         setSdkReady(true)
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, orderId, successPay, successDeliver, order])
 
   const successPaymentHandler = (paymentResult) => {
@@ -84,6 +85,10 @@ const OrderScreen = ({ match, history }) => {
   const deliverHandler = () => {
     dispatch(deliverOrder(order))
   }
+  // const codHandler = (paymentResult) => {
+  //   dispatch(payOrder(orderId, paymentResult))
+  //   //dispatch(deliverOrder(order))
+  // }
 
   return loading ? (
     <Loader />
@@ -112,7 +117,7 @@ const OrderScreen = ({ match, history }) => {
               </p>
               {order.isDelivered ? (
                 <Message variant='success'>
-                  Delivered on {order.deliveredAt}
+                  Delivered on {new Date(order.deliveredAt).toLocaleString()}
                 </Message>
               ) : (
                 <Message variant='danger'>Not Delivered</Message>
@@ -126,7 +131,7 @@ const OrderScreen = ({ match, history }) => {
                 {order.paymentMethod}
               </p>
               {order.isPaid ? (
-                <Message variant='success'>Paid on {order.paidAt}</Message>
+                <Message variant='success'>Paid on  {new Date(order.paidAt).toLocaleString()}</Message>
               ) : (
                 <Message variant='danger'>Not Paid</Message>
               )}
@@ -195,9 +200,26 @@ const OrderScreen = ({ match, history }) => {
                   <Col>${order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
+              {/* {
+                userInfo &&
+                userInfo.isAdmin &&
+                order.paymentMethod === "COD" &&
+                !order.isDelivered &&  (
+                  <ListGroup.Item>
+                    <Button
+                      type='button'
+                      className='btn btn-block'
+                      onClick={codHandler}
+                    >
+                      Mark As Delivered
+                    </Button>
+                  </ListGroup.Item>
+                )
+              } */}
               {!order.isPaid && (
                 <ListGroup.Item>
                   {loadingPay && <Loader />}
+                  
                   {!sdkReady ? (
                     <Loader />
                   ) : (
@@ -206,13 +228,14 @@ const OrderScreen = ({ match, history }) => {
                       onSuccess={successPaymentHandler}
                     />
                   )}
+                  
                 </ListGroup.Item>
               )}
               {loadingDeliver && <Loader />}
               {userInfo &&
                 userInfo.isAdmin &&
                 order.isPaid &&
-                !order.isDelivered && (
+                !order.isDelivered &&  (
                   <ListGroup.Item>
                     <Button
                       type='button'
