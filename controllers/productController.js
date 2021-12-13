@@ -56,7 +56,7 @@ const deleteProduct = async (req, res) => {
 
     if (product) {
       await product.remove()
-      res.status(200).json({
+      res.status(201).json({
         message: 'Product removed'
       })
     } else {
