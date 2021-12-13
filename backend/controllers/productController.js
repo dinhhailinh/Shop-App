@@ -22,12 +22,13 @@ const getProducts = async (req, res) => {
       .limit(pageSize)
       .skip(pageSize * (page - 1))
 
-    res.status().json({
+    res.status(200).json({
       products,
       page,
       pages: Math.ceil(count / pageSize)
     })
   } catch (error) {
+    console.log(error);
     res.status(500).json(error)
   }
 
@@ -38,7 +39,7 @@ const getProductById = async (req, res) => {
     const product = await Product.findById(req.params.id)
 
     if (product) {
-      res.status().json(product)
+      res.status(200).json(product)
     } else {
       res.status(404)
       throw new Error('Product not found')
@@ -55,7 +56,7 @@ const deleteProduct = async (req, res) => {
 
     if (product) {
       await product.remove()
-      res.status().json({
+      res.status(201).json({
         message: 'Product removed'
       })
     } else {
@@ -116,7 +117,7 @@ const updateProduct = async (req, res) => {
       product.countInStock = countInStock
 
       const updatedProduct = await product.save()
-      res.status().json(updatedProduct)
+      res.status(200).json(updatedProduct)
     } else {
       res.status(404)
         .json('Product not found')
@@ -182,7 +183,7 @@ const getTopProducts = async (req, res) => {
       rating: -1
     }).limit(3)
 
-    res.status().json(products)
+    res.status(200).json(products)
   } catch (error) {
     res.status(500)
       .json(error)
