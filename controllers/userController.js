@@ -13,7 +13,7 @@ const authUser = async (req, res) => {
     })
 
     if (user && (await user.matchPassword(password))) {
-      res.status().json({
+      res.status(200).json({
         _id: user._id,
         name: user.name,
         email: user.email,
@@ -25,6 +25,7 @@ const authUser = async (req, res) => {
         .json('Invalid email or password')
     }
   } catch (error) {
+    console.log(error);
     res.status(500)
       .json(error)
   }
@@ -88,6 +89,7 @@ const getUserProfile = async (req, res) => {
         .json('User not found')
     }
   } catch (error) {
+    console.log(error);
     res.status(500)
       .json(error)
   }
@@ -107,7 +109,7 @@ const updateUserProfile = async (req, res) => {
 
       const updatedUser = await user.save()
 
-      res.status().json({
+      res.status(200).json({
         _id: updatedUser._id,
         name: updatedUser.name,
         email: updatedUser.email,
@@ -130,6 +132,7 @@ const getUsers = async (req, res) => {
     const users = await User.find({})
     res.status(200).json(users)
   } catch (error) {
+    console.log(error);
     res.status(500)
       .json(error)
   }
@@ -161,7 +164,7 @@ const getUserById = async (req, res) => {
     const user = await User.findById(req.params.id).select('-password')
 
     if (user) {
-      res.status().json(user)
+      res.status(200).json(user)
     } else {
       res.status(404)
         .json('User not found')
@@ -184,7 +187,7 @@ const updateUser = async (req, res) => {
 
       const updatedUser = await user.save()
 
-      res.status().json({
+      res.status(200).json({
         _id: updatedUser._id,
         name: updatedUser.name,
         email: updatedUser.email,
